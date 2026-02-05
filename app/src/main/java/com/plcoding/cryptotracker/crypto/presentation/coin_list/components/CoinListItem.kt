@@ -56,6 +56,7 @@ fun CoinListItem(
             modifier = Modifier.size(85.dp)
         )
 
+
         Column(modifier = Modifier.weight(1f)) {
              Text(
                  text = coinUi.symbol,
@@ -90,9 +91,8 @@ fun CoinListItem(
     }
 }
 
-@Preview
+
 @PreviewLightDark
-@PreviewDynamicColors
 @Composable
 private fun CoinListItemPreview() {
     CryptoTrackerTheme(){
