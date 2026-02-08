@@ -1,7 +1,7 @@
 package com.plcoding.cryptotracker.crypto.presentation.coin_detail
 
 
-import android.provider.ContactsContract.Data
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
@@ -18,12 +18,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
+
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.draw
+
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
@@ -35,8 +35,10 @@ import com.plcoding.cryptotracker.crypto.domain.CoinPrice
 import com.plcoding.cryptotracker.ui.theme.CryptoTrackerTheme
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+
 import kotlin.math.roundToInt
 import kotlin.random.Random
+
 
 @Composable
 fun LineChart(
@@ -111,7 +113,11 @@ fun LineChart(
         val maxXLabelWidth = xLabelTextLayoutResult.maxOfOrNull { it.size.width } ?: 0
         val maxXLabelHeight = xLabelTextLayoutResult.maxOfOrNull { it.size.height } ?: 0
         val maxXLabelLineCount = xLabelTextLayoutResult.maxOfOrNull { it.lineCount } ?: 0
-        val xLabelLineHeight = maxXLabelHeight / maxXLabelLineCount
+        val xLabelLineHeight =if (maxXLabelLineCount > 0) {
+            maxXLabelHeight / maxXLabelLineCount
+        } else {
+            0
+        }
 
         val viewPortHeightPx = size.height - (maxXLabelHeight + 2 * verticalPaddingPx + xLabelLineHeight + xAxisLabelSpacingPx)
 
@@ -136,20 +142,18 @@ fun LineChart(
         val viewPortRightX  = size.width
         val viewPortBottomY = viewPortTopY + viewPortHeightPx
         val viewPortLeftX = 2f * horizontalPaddingPx + maxYLabelWidth
-        val viewPort = Rect(
-            left = viewPortLeftX,
-            top = viewPortTopY,
-            right = viewPortRightX,
-            bottom = viewPortBottomY
-        )
+
+
+
         xLabelWidth = maxXLabelWidth + xAxisLabelSpacingPx
-        //drawRect(color = Color.Green.copy(alpha = 0.3f), topLeft = viewPort.topLeft, size = viewPort.size)
+
         xLabelTextLayoutResult.forEachIndexed { index, result ->
             val x = viewPortLeftX + xAxisLabelSpacingPx / 2f + index * xLabelWidth
+
             drawText(
                 textLayoutResult = result,
                 topLeft = Offset(
-                    x = x,
+                    x = x + (maxXLabelWidth / 2f) - (result.size.width / 2f),
                     y = viewPortBottomY + xAxisLabelSpacingPx
                 ),
                 color = if (index == selectedDataPointIndex) {
@@ -166,11 +170,11 @@ fun LineChart(
                         style.unselectedColor
                     },
                     start = Offset(
-                        x = x + result.size.width / 2f,
+                        x = x + maxXLabelWidth / 2f,
                         y = viewPortBottomY
                     ),
                     end = Offset(
-                        x = x + result.size.width / 2f,
+                        x = x + maxXLabelWidth / 2f,
                         y = viewPortTopY
                     ),
                     strokeWidth = if (selectedDataPointIndex == index) {
